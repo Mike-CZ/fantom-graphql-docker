@@ -1,0 +1,31 @@
+version: '3.9'
+
+networks:
+  graphql-network:
+    driver: bridge
+
+services:
+  app:
+    build: ./app
+    ports:
+      - "80:16761"
+      - "2345:2345"
+    volumes:
+      - ./$PROJECT_PATH:/var/graphql
+      - ./$PROJECT_PATH/vendor:/go/pkg/mod/cache  # mount go module cache for IDE
+    security_opt:
+      - "seccomp:unconfined"
+    networks:
+      - graphql-network
+
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./.data/mongodb:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    networks:
+      - graphql-network
