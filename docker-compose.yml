@@ -12,7 +12,6 @@ services:
       - "2345:2345"
     volumes:
       - ./$PROJECT_PATH:/var/graphql
-      - ./$PROJECT_PATH/vendor:/go/pkg/mod/cache  # mount go module cache for IDE
     security_opt:
       - "seccomp:unconfined"
     networks:
