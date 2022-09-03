@@ -6,12 +6,20 @@ networks:
 
 services:
   app:
-    build: ./app
+    build:
+      context: ./app
+      args:
+        UID: $UID
+        GID: $GID
     ports:
       - "80:16761"
       - "2345:2345"
     volumes:
       - ./$PROJECT_PATH:/var/graphql
+      - $OPERA_IPC_PATH:/app/opera.ipc
+    environment:
+      - START_APP=$START_APP
+      - CFG_PATH=$CONTAINER_CFG_PATH
     security_opt:
       - "seccomp:unconfined"
     networks:
@@ -24,7 +32,7 @@ services:
     volumes:
       - ./.data/mongodb:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PW
     networks:
       - graphql-network
